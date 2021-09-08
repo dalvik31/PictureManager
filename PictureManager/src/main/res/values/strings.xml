@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">OpenCamera</string>
+    <string name="dialog_permission_title">Permiso requerido</string>
+</resources>
