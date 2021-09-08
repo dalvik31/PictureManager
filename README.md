@@ -9,17 +9,18 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-
+```
 
 > Step 2. Add the dependency
+
+```
 	dependencies {
 	        implementation 'com.github.dalvik31:PictureManager:Tag'
 	}
-
+```
 
 
 > Step 3. Use
-
 ```
 	*** Java
 	private PictureManager pictureManager =  PictureManager.Companion.from(this);
@@ -55,5 +56,7 @@
                 image.setImageBitmap(thumbnail)
             }
         }
+	
+```
 
 
