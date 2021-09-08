@@ -13,11 +13,11 @@
 
 > Step 2. Add the dependency
 
-```
+
 	dependencies {
 	        implementation 'com.github.dalvik31:PictureManager:Tag'
 	}
-```
+
 
 
 > Step 3. Use java
