@@ -23,11 +23,11 @@ class PictureManager private constructor(private val activity: WeakReference<App
     private val requiredPermissions = Manifest.permission.CAMERA
     private var latestTmpUri: Uri? = null
     private var message: String = String()
-    private var callback: (Bitmap) -> Unit = {}
+    private var callback: (Bitmap, String) -> Unit = {_,_ ->}
     private lateinit var tmpFile: File
 
     companion object {
-        fun from(fragment: AppCompatActivity) = PictureManager(WeakReference(fragment))
+        fun from(activity: AppCompatActivity) = PictureManager(WeakReference(activity))
     }
 
     private val permissionCheck =
@@ -42,7 +42,7 @@ class PictureManager private constructor(private val activity: WeakReference<App
             if (isSuccess) {
                 latestTmpUri?.let {
                     val compressedImageFile = Compressor(activity.get()).compressToBitmap(tmpFile)
-                    callback(compressedImageFile)
+                    callback(compressedImageFile,tmpFile.absolutePath)
                     cleanUp()
                 }
             }
@@ -51,9 +51,10 @@ class PictureManager private constructor(private val activity: WeakReference<App
     private val selectImageFromGalleryResult = activity.get()
         ?.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
+                val temfile = getFile(uri)
                 val compressedImageFile =
-                    Compressor(activity.get()).compressToBitmap(getFile(uri))
-                callback(compressedImageFile)
+                    Compressor(activity.get()).compressToBitmap(temfile)
+                callback(compressedImageFile,temfile.absolutePath)
                 cleanUp()
             }
         }
@@ -71,22 +72,22 @@ class PictureManager private constructor(private val activity: WeakReference<App
         return this
     }
 
-    fun selectImageWithCamera(callback: (Bitmap) -> Unit) {
+    fun selectImageWithCamera(callback: (Bitmap,String) -> Unit) {
         this.callback = callback
         handlePermissionRequest()
     }
 
-    fun selectImageFromGallery(callback: (Bitmap) -> Unit) {
+    fun selectImageFromGallery(callback: (Bitmap,String) -> Unit) {
         this.callback = callback
         selectImageFromGalleryResult!!.launch("image/*")
     }
 
-    private fun displayRationale(fragment: AppCompatActivity) {
-        AlertDialog.Builder(fragment)
-            .setTitle(fragment.getString(R.string.dialog_permission_title))
+    private fun displayRationale(activity: AppCompatActivity) {
+        AlertDialog.Builder(activity)
+            .setTitle(activity.getString(R.string.dialog_permission_title))
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(fragment.getString(android.R.string.ok)) { _, _ ->
+            .setPositiveButton(activity.getString(android.R.string.ok)) { _, _ ->
                 requestPermissions()
             }
             .show()
@@ -99,9 +100,9 @@ class PictureManager private constructor(private val activity: WeakReference<App
         }
     }
     private fun handlePermissionRequest() {
-        activity.get()?.let { fragment ->
+        activity.get()?.let { activity ->
             when {
-                shouldShowPermissionRationale(fragment) -> displayRationale(fragment)
+                shouldShowPermissionRationale(activity) -> displayRationale(activity)
                 else -> requestPermissions()
             }
         }
@@ -110,12 +111,12 @@ class PictureManager private constructor(private val activity: WeakReference<App
         permissionCheck?.launch(requiredPermissions)
     }
 
-    private fun shouldShowPermissionRationale(fragment: AppCompatActivity) =
-        ActivityCompat.shouldShowRequestPermissionRationale(fragment, requiredPermissions)
+    private fun shouldShowPermissionRationale(activity: AppCompatActivity) =
+        ActivityCompat.shouldShowRequestPermissionRationale(activity, requiredPermissions)
 
     private fun cleanUp() {
         message = String()
-        callback = {}
+        callback = {_,_ ->}
     }
 
     /**

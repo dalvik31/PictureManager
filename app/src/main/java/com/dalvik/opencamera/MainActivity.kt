@@ -17,14 +17,14 @@ class MainActivity : AppCompatActivity() {
         buttonTakePhoto.setOnClickListener {
             cameraManager
                 .message("Para una mejor experiencia es necesario que permitas el uso de la camara del dispositivo.")
-                .selectImageWithCamera {
-                    image.setImageBitmap(it)
+                .selectImageWithCamera { thumbnail, absolutePath ->
+                    image.setImageBitmap(thumbnail)
                 }
         }
 
         buttonGaleria.setOnClickListener{
-            cameraManager.selectImageFromGallery{
-                image.setImageBitmap(it)
+            cameraManager.selectImageFromGallery{ thumbnail, absolutePath ->
+                image.setImageBitmap(thumbnail)
             }
         }
     }
