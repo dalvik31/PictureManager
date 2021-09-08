@@ -22,6 +22,7 @@
 
 > Step 3. Use java
 	
+	public class MainActivity extends AppCompatActivity {
 	
 	private PictureManager pictureManager =  PictureManager.Companion.from(this);
 	
@@ -40,6 +41,8 @@
 		
 
 > Step 3. Use Kotlin
+	
+	class MainActivity : AppCompatActivity() {
 	
 	private val pictureManager = PictureManager.from(this)
 	
