@@ -22,7 +22,7 @@
 
 > Step 3. Use java
 	
-	```
+	
 	private PictureManager pictureManager =  PictureManager.Companion.from(this);
 	
 	pictureManager
