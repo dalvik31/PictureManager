@@ -20,9 +20,9 @@
 ```
 
 
-> Step 3. Use
-```
-	*** Java
+> Step 3. Use java
+	
+	```
 	private PictureManager pictureManager =  PictureManager.Companion.from(this);
 	
 	pictureManager
@@ -38,7 +38,8 @@
 	    return null;
 	});
 		
-	*** Kotlin
+
+> Step 3. Use Kotlin
 	
 	private val pictureManager = PictureManager.from(this)
 	
